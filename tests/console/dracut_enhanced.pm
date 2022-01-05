@@ -27,10 +27,17 @@ use version_utils 'is_sle';
 sub run {
     select_console 'root-console';
     my $dracut_test = get_var('DRACUT_TEST');
-    # dracut on SLE15SP2 was updated to 049
+    # dracut 044
     my $dracut_version = "dracut-patches.tar.gz";
     if (is_sle('>=15-SP2')) {
-        $dracut_version = "dracut-patches-SLE15SP2.tar.gz";
+        if (is_sle('>=15-SP4')) {
+            # dracut 055
+            $dracut_version = "dracut-patches-SLE15SP4.tar.gz";
+        }
+        else {
+            # dracut 049
+            $dracut_version = "dracut-patches-SLE15SP2.tar.gz";
+        }
         # Enable source repositories (not needed 12SP2 ~ 15SP1)
         assert_script_run 'for r in `zypper lr|awk \'/Source-Pool/ {print $5}\'`;do zypper mr -e --refresh $r;done';
     }
